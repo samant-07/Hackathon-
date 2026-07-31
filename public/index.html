@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaunchCoach — AI Hackathon Project Coach</title>
+  <meta name="description" content="AI-powered coaching agent that turns your hackathon idea into a polished build plan, pitch, and demo roadmap." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ── Animated Background ── -->
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ── App Shell ── -->
+<div class="app">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">🚀</div>
+        <div class="logo-text">
+          <span class="logo-name">LaunchCoach</span>
+          <span class="logo-tagline">AI Project Coach</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-analyze" onclick="switchTab('analyze')">
+        <span class="nav-icon">🧠</span>
+        <span class="nav-label">Analyze Concept</span>
+      </button>
+      <button class="nav-item" id="nav-roadmap" onclick="switchTab('roadmap')">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">Roadmap</span>
+        <span class="nav-badge hidden" id="roadmap-badge">New</span>
+      </button>
+      <button class="nav-item" id="nav-pitch" onclick="switchTab('pitch')">
+        <span class="nav-icon">🎤</span>
+        <span class="nav-label">Pitch Builder</span>
+      </button>
+      <button class="nav-item" id="nav-standup" onclick="switchTab('standup')">
+        <span class="nav-icon">⚠️</span>
+        <span class="nav-label">Blocker Check</span>
+      </button>
+      <button class="nav-item" id="nav-chat" onclick="switchTab('chat')">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Coach Chat</span>
+        <span class="nav-badge pulse" id="chat-badge">AI</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="project-card" id="project-card">
+        <div class="project-card-label">Current Project</div>
+        <div class="project-card-name" id="sidebar-project-name">No project yet</div>
+        <div class="project-card-meta" id="sidebar-project-meta">Enter a concept to start</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main class="main">
+
+    <!-- ── Header ── -->
+    <header class="top-bar">
+      <button class="menu-toggle" onclick="toggleSidebar()" id="menu-btn">☰</button>
+      <div class="top-bar-title" id="page-title">Analyze Your Concept</div>
+      <div class="top-bar-actions">
+        <div class="status-pill" id="status-pill">
+          <span class="status-dot"></span>
+          <span>AI Ready</span>
+        </div>
+        <div class="timer-display" id="timer-display">
+          <span class="timer-icon">⏱</span>
+          <span id="timer-text">00:00:00</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Pages ── -->
+    <div class="content">
+
+      <!-- ─── ANALYZE PAGE ─── -->
+      <section class="page active" id="page-analyze">
+        <div class="page-hero">
+          <h1 class="hero-title">Turn Your Idea Into a <span class="gradient-text">Build Plan</span></h1>
+          <p class="hero-sub">Paste your project concept and get an instant AI coaching report — scope analysis, roadmap, pitch, and risk assessment.</p>
+        </div>
+
+        <div class="analyze-grid">
+          <div class="input-panel glass-card">
+            <div class="card-header">
+              <span class="card-icon">💡</span>
+              <h2 class="card-title">Project Concept</h2>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">What are you building?</label>
+              <textarea
+                id="concept-input"
+                class="form-textarea"
+                placeholder="Describe your project idea in detail... e.g., 'An AI-powered study buddy that analyzes lecture recordings, generates flashcards, and creates personalized quiz schedules based on a student's learning pace and upcoming exams.'"
+                rows="6"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Timeframe</label>
+                <select id="timeframe-input" class="form-select">
+                  <option value="24 hours">24 hours</option>
+                  <option value="36 hours">36 hours</option>
+                  <option value="48 hours">48 hours</option>
+                  <option value="72 hours">72 hours</option>
+                  <option value="1 week">1 week</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Team Size</label>
+                <select id="teamsize-input" class="form-select">
+                  <option value="Solo (1 person)">Solo</option>
+                  <option value="2 people">2 people</option>
+                  <option value="3 people" selected>3 people</option>
+                  <option value="4 people">4 people</option>
+                  <option value="5+ people">5+ people</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tech Stack (optional)</label>
+              <input
+                id="techstack-input"
+                class="form-input"
+                type="text"
+                placeholder="e.g., React, Node.js, Python, Firebase, OpenAI API..."
+              />
+            </div>
+
+            <button class="btn-primary" id="analyze-btn" onclick="analyzeProject()">
+              <span class="btn-icon">🧠</span>
+              <span>Analyze My Project</span>
+              <span class="btn-loader hidden" id="analyze-loader">⟳</span>
+            </button>
+          </div>
+
+          <!-- Results Panel -->
+          <div class="results-panel" id="results-panel">
+            <div class="empty-state" id="empty-state">
+              <div class="empty-icon">🚀</div>
+              <h3>Ready to Coach</h3>
+              <p>Enter your project concept and hit <strong>Analyze</strong> to get your full coaching report.</p>
+              <div class="feature-chips">
+                <span class="chip">Scope Critique</span>
+                <span class="chip">Gap Finder</span>
+                <span class="chip">Roadmap</span>
+                <span class="chip">Pitch Outline</span>
+                <span class="chip">Risk Report</span>
+              </div>
+            </div>
+
+            <div class="analysis-results hidden" id="analysis-results">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── ROADMAP PAGE ─── -->
+      <section class="page" id="page-roadmap">
+        <div class="page-hero">
+          <h1 class="hero-title">Your <span class="gradient-text">Build Roadmap</span></h1>
+          <p class="hero-sub">Visual milestone tracker to keep your team on track from kickoff to demo.</p>
+        </div>
+
+        <div class="roadmap-container" id="roadmap-container">
+          <div class="empty-state">
+            <div class="empty-icon">🗺️</div>
+            <h3>No Roadmap Yet</h3>
+            <p>Analyze your project concept first to generate a visual roadmap.</p>
+            <button class="btn-secondary" onclick="switchTab('analyze')">Go to Analyze →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── PITCH PAGE ─── -->
+      <section class="page" id="page-pitch">
+        <div class="page-hero">
+          <h1 class="hero-title"><span class="gradient-text">Pitch</span> Builder</h1>
+          <p class="hero-sub">Generate a compelling hackathon pitch deck outline with talking points and demo script.</p>
+        </div>
+
+        <div class="pitch-grid">
+          <div class="glass-card">
+            <div class="card-header">
+              <span class="card-icon">🎤</span>
+              <h2 class="card-title">Generate Pitch Outline</h2>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Project Concept</label>
+              <textarea id="pitch-concept" class="form-textarea" rows="4" placeholder="Describe your project (or it will auto-fill from your analysis)..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Audience</label>
+              <input id="pitch-audience" class="form-input" type="text" placeholder="e.g., Hackathon judges, Investors, Students..." />
+            </div>
+            <button class="btn-primary" onclick="generatePitch()">
+              <span class="btn-icon">🎤</span>
+              <span>Build My Pitch</span>
+            </button>
+          </div>
+
+          <div class="pitch-output glass-card" id="pitch-output">
+            <div class="empty-state">
+              <div class="empty-icon">🎤</div>
+              <h3>Pitch will appear here</h3>
+              <p>A 5-slide pitch outline with talking scripts will be generated.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── STANDUP PAGE ─── -->
+      <section class="page" id="page-standup">
+        <div class="page-hero">
+          <h1 class="hero-title">Blocker <span class="gradient-text">Check-In</span></h1>
+          <p class="hero-sub">Quick standup check to surface risks, reprioritize tasks, and unblock your team fast.</p>
+        </div>
+
+        <div class="standup-grid">
+          <!-- Task Tracker -->
+          <div class="glass-card">
+            <div class="card-header">
+              <span class="card-icon">📋</span>
+              <h2 class="card-title">Current Tasks</h2>
+              <button class="btn-icon-only" onclick="addTask()" title="Add Task">+</button>
+            </div>
+            <div class="task-list" id="task-list">
+              <div class="task-item">
+                <select class="task-status">
+                  <option value="todo">🔵 To Do</option>
+                  <option value="doing">🟡 In Progress</option>
+                  <option value="done">🟢 Done</option>
+                  <option value="blocked">🔴 Blocked</option>
+                </select>
+                <input class="task-input" type="text" placeholder="Task description..." />
+                <button class="task-delete" onclick="deleteTask(this)">×</button>
+              </div>
+            </div>
+            <button class="btn-ghost" onclick="addTask()">+ Add Task</button>
+          </div>
+
+          <!-- Blocker List -->
+          <div class="glass-card">
+            <div class="card-header">
+              <span class="card-icon">🚧</span>
+              <h2 class="card-title">Blockers & Risks</h2>
+              <button class="btn-icon-only" onclick="addBlocker()" title="Add Blocker">+</button>
+            </div>
+            <div class="blocker-list" id="blocker-list">
+              <div class="blocker-item">
+                <span class="blocker-badge">🔴 High</span>
+                <input class="task-input" type="text" placeholder="Describe the blocker or risk..." />
+                <button class="task-delete" onclick="deleteTask(this)">×</button>
+              </div>
+            </div>
+            <button class="btn-ghost" onclick="addBlocker()">+ Add Blocker</button>
+          </div>
+
+          <!-- Time & Run Check -->
+          <div class="glass-card standup-controls">
+            <div class="card-header">
+              <span class="card-icon">⏱</span>
+              <h2 class="card-title">Run Standup</h2>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time Remaining</label>
+              <select id="time-remaining" class="form-select">
+                <option>20 hours</option>
+                <option>16 hours</option>
+                <option>12 hours</option>
+                <option>8 hours</option>
+                <option>4 hours</option>
+                <option>2 hours</option>
+                <option>1 hour</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="runStandup()">
+              <span class="btn-icon">⚡</span>
+              <span>Get Coaching Advice</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Standup Result -->
+        <div class="standup-result glass-card hidden" id="standup-result">
+          <!-- Filled by JS -->
+        </div>
+      </section>
+
+      <!-- ─── CHAT PAGE ─── -->
+      <section class="page" id="page-chat">
+        <div class="chat-container">
+          <div class="chat-header glass-card">
+            <div class="agent-avatar">🤖</div>
+            <div class="agent-info">
+              <div class="agent-name">LaunchCoach AI</div>
+              <div class="agent-status"><span class="status-dot"></span> Always on</div>
+            </div>
+            <button class="btn-ghost small" onclick="clearChat()">Clear Chat</button>
+          </div>
+
+          <div class="chat-messages" id="chat-messages">
+            <div class="message agent-message">
+              <div class="message-avatar">🤖</div>
+              <div class="message-bubble">
+                <p>Hey! I'm <strong>LaunchCoach</strong> — your AI project coach. 🚀</p>
+                <p>I can help you with:</p>
+                <ul>
+                  <li>Critiquing your project scope</li>
+                  <li>Building a realistic roadmap</li>
+                  <li>Crafting your pitch story</li>
+                  <li>Unblocking technical challenges</li>
+                  <li>Keeping your team focused</li>
+                </ul>
+                <p>What's on your mind? Ask me anything about your project!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input-area glass-card">
+            <div class="quick-prompts">
+              <button class="quick-prompt" onclick="sendQuickPrompt(this)">What should I cut to ship on time?</button>
+              <button class="quick-prompt" onclick="sendQuickPrompt(this)">How do I make my demo impressive?</button>
+              <button class="quick-prompt" onclick="sendQuickPrompt(this)">What's a good opening line for my pitch?</button>
+              <button class="quick-prompt" onclick="sendQuickPrompt(this)">Help me estimate build time</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea
+                id="chat-input"
+                class="chat-textarea"
+                placeholder="Ask LaunchCoach anything about your project..."
+                rows="2"
+                onkeydown="handleChatKey(event)"
+              ></textarea>
+              <button class="btn-send" id="send-btn" onclick="sendMessage()">
+                <span>↑</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

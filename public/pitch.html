@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LaunchCoach — Hackathon Pitch</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --cream:#FBF9F6;--white:#fff;
+  --olive:#5A6B5D;--sage:#7F9183;--sand:#D5CBBF;
+  --terracotta:#C17767;--gold:#D4AF37;--charcoal:#2C302E;
+  --muted:#7A7571;
+}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--charcoal);overflow:hidden;height:100vh;width:100vw;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+
+/* ── Deck container ── */
+.deck{position:relative;width:100vw;height:100vh;}
+
+/* ── Slide base ── */
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:60px 80px;
+  opacity:0;pointer-events:none;
+  transition:opacity .6s ease, transform .6s ease;
+  transform:translateY(30px);
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.slide.exit{opacity:0;transform:translateY(-30px);}
+
+/* ── Backgrounds per slide ── */
+.slide-1{background:var(--charcoal);}
+.slide-2{background:var(--cream);}
+.slide-3{background:var(--white);}
+.slide-4{background:var(--charcoal);}
+.slide-5{background:var(--cream);}
+.slide-6{background:var(--white);}
+.slide-7{background:var(--olive);}
+
+/* ── Decorative orbs ── */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.4;pointer-events:none;animation:drift 12s ease-in-out infinite alternate;}
+@keyframes drift{0%{transform:translate(0,0);}100%{transform:translate(40px,25px);}}
+
+/* ── Nav dots ── */
+.nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:100;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:all .3s;}
+.dot.on{background:#fff;transform:scale(1.4);}
+.dot.dark{background:rgba(44,48,46,.3);}
+.dot.dark.on{background:var(--charcoal);}
+
+/* ── Arrows ── */
+.arr{position:fixed;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.15);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.3rem;cursor:pointer;z-index:100;transition:background .2s;}
+.arr:hover{background:rgba(0,0,0,.35);}
+.arr.dark{color:var(--charcoal);background:rgba(44,48,46,.1);}
+.arr.dark:hover{background:rgba(44,48,46,.2);}
+#prev{left:20px;}
+#next{right:20px;}
+.slide-count{position:fixed;top:20px;right:28px;font-size:.85rem;opacity:.5;z-index:100;font-weight:500;}
+
+/* ════════════════════════════════
+   SLIDE 1 — Title
+════════════════════════════════ */
+.s1-logo{font-size:4rem;margin-bottom:8px;animation:popIn .8s ease .3s both;}
+.s1-name{font-size:4.5rem;font-weight:700;color:#fff;letter-spacing:-2px;line-height:1;animation:popIn .8s ease .5s both;}
+.s1-name span{color:var(--terracotta);}
+.s1-tag{font-size:1.3rem;color:var(--sand);font-weight:300;margin-top:16px;animation:popIn .8s ease .7s both;}
+.s1-badge{margin-top:40px;display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:40px;padding:10px 24px;color:rgba(255,255,255,.7);font-size:.95rem;animation:popIn .8s ease .9s both;}
+.s1-badge span{width:8px;height:8px;border-radius:50%;background:var(--sage);display:inline-block;}
+
+@keyframes popIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════════════════════════════
+   SLIDE 2 — Problem
+════════════════════════════════ */
+.s2-label{font-size:.8rem;text-transform:uppercase;letter-spacing:.15em;color:var(--terracotta);font-weight:600;margin-bottom:16px;}
+.s2-title{font-size:3rem;color:var(--charcoal);line-height:1.15;max-width:700px;text-align:center;margin-bottom:48px;}
+.problem-cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+.pcard{background:#fff;border:1px solid #E8E3DA;border-radius:16px;padding:28px 32px;max-width:240px;text-align:left;box-shadow:0 4px 20px rgba(0,0,0,.05);transition:transform .3s;}
+.pcard:hover{transform:translateY(-6px);}
+.pcard-icon{font-size:2rem;margin-bottom:12px;}
+.pcard-title{font-weight:600;font-size:1rem;margin-bottom:8px;}
+.pcard-desc{font-size:.9rem;color:var(--muted);line-height:1.6;}
+
+/* ════════════════════════════════
+   SLIDE 3 — Solution
+════════════════════════════════ */
+.sol-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1000px;width:100%;}
+.sol-left h2{font-size:2.8rem;line-height:1.2;margin-bottom:20px;}
+.sol-left h2 em{font-style:italic;color:var(--terracotta);}
+.sol-left p{font-size:1.1rem;color:var(--muted);line-height:1.7;}
+.sol-right{display:flex;flex-direction:column;gap:16px;}
+.sol-item{display:flex;align-items:flex-start;gap:16px;background:var(--cream);border:1px solid #E8E3DA;border-radius:12px;padding:18px 20px;}
+.sol-num{width:32px;height:32px;border-radius:50%;background:var(--olive);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:.9rem;}
+.sol-text strong{display:block;font-weight:600;margin-bottom:4px;}
+.sol-text span{font-size:.9rem;color:var(--muted);}
+
+/* ════════════════════════════════
+   SLIDE 4 — Features
+════════════════════════════════ */
+.feat-title{font-size:2.5rem;color:#fff;margin-bottom:12px;text-align:center;}
+.feat-sub{color:var(--sand);text-align:center;margin-bottom:48px;font-size:1.05rem;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;}
+.fcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px 24px;transition:all .3s;cursor:default;}
+.fcard:hover{background:rgba(255,255,255,.1);transform:translateY(-4px);}
+.fcard-icon{font-size:2.2rem;margin-bottom:16px;}
+.fcard-name{font-weight:600;color:#fff;font-size:1.05rem;margin-bottom:8px;}
+.fcard-desc{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.6;}
+
+/* ════════════════════════════════
+   SLIDE 5 — How It Works
+════════════════════════════════ */
+.how-title{font-size:2.8rem;text-align:center;margin-bottom:12px;}
+.how-sub{color:var(--muted);text-align:center;margin-bottom:48px;}
+.flow{display:flex;align-items:center;gap:0;max-width:900px;width:100%;}
+.flow-step{flex:1;text-align:center;padding:0 16px;}
+.flow-icon{width:64px;height:64px;background:var(--olive);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px;}
+.flow-step h4{font-size:1rem;font-weight:600;margin-bottom:6px;}
+.flow-step p{font-size:.85rem;color:var(--muted);line-height:1.5;}
+.flow-arrow{font-size:1.5rem;color:var(--sand);flex-shrink:0;}
+
+/* ════════════════════════════════
+   SLIDE 6 — Tech Stack
+════════════════════════════════ */
+.tech-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;max-width:900px;width:100%;}
+.tech-wrap h2{font-size:2.8rem;line-height:1.2;grid-column:1/-1;}
+.tech-col h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--terracotta);margin-bottom:20px;}
+.tech-pill-list{display:flex;flex-wrap:wrap;gap:12px;}
+.tech-pill{display:flex;align-items:center;gap:8px;background:var(--cream);border:1px solid #E8E3DA;border-radius:8px;padding:10px 16px;font-size:.9rem;font-weight:500;}
+.tech-pill-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ════════════════════════════════
+   SLIDE 7 — CTA
+════════════════════════════════ */
+.cta-top{font-size:.85rem;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.6);margin-bottom:20px;}
+.cta-title{font-size:4.5rem;color:#fff;line-height:1.1;text-align:center;max-width:700px;margin-bottom:24px;}
+.cta-title em{font-style:italic;color:var(--sand);}
+.cta-sub{color:rgba(255,255,255,.65);font-size:1.2rem;text-align:center;margin-bottom:48px;}
+.cta-url{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 32px;color:#fff;font-size:1.1rem;font-weight:500;}
+.cta-team{position:absolute;bottom:40px;left:0;right:0;text-align:center;color:rgba(255,255,255,.4);font-size:.9rem;}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ── SLIDE 1: TITLE ── -->
+  <div class="slide slide-1 active" data-theme="dark">
+    <div class="orb" style="width:500px;height:500px;background:#7F9183;top:-200px;right:-150px;animation-delay:0s;"></div>
+    <div class="orb" style="width:400px;height:400px;background:#C17767;bottom:-150px;left:-100px;animation-delay:-4s;"></div>
+    <div class="s1-logo">🚀</div>
+    <h1 class="s1-name">Launch<span>Coach</span></h1>
+    <p class="s1-tag">Your AI-Powered Hackathon Project Advisor</p>
+    <div class="s1-badge"><span></span> Built for teams who ship</div>
+  </div>
+
+  <!-- ── SLIDE 2: PROBLEM ── -->
+  <div class="slide slide-2" data-theme="light">
+    <div class="s2-label">The Problem</div>
+    <h2 class="s2-title">Most hackathon teams have great ideas — but <em style="font-style:italic;color:var(--terracotta)">poor execution plans.</em></h2>
+    <div class="problem-cards">
+      <div class="pcard">
+        <div class="pcard-icon">😵</div>
+        <div class="pcard-title">Scope Creep</div>
+        <div class="pcard-desc">Teams over-engineer and run out of time before a working demo exists.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-icon">🧱</div>
+        <div class="pcard-title">Hidden Blockers</div>
+        <div class="pcard-desc">Critical risks and dependencies only surface when it's too late to pivot.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-icon">🎤</div>
+        <div class="pcard-title">Weak Pitches</div>
+        <div class="pcard-desc">Even working projects lose to better-presented ideas with clearer stories.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-icon">🗺️</div>
+        <div class="pcard-title">No Roadmap</div>
+        <div class="pcard-desc">Without milestones, teams build without direction and miss deliverables.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 3: SOLUTION ── -->
+  <div class="slide slide-3" data-theme="light">
+    <div class="sol-wrap">
+      <div class="sol-left">
+        <h2>Meet your AI <em>coach</em> in the room.</h2>
+        <p>LaunchCoach is an intelligent agent that transforms a raw concept into a structured, executable plan — instantly. From idea to demo, in minutes.</p>
+      </div>
+      <div class="sol-right">
+        <div class="sol-item">
+          <div class="sol-num">1</div>
+          <div class="sol-text"><strong>Paste your idea</strong><span>Describe your concept in plain English — no templates needed.</span></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-num">2</div>
+          <div class="sol-text"><strong>Get your coaching report</strong><span>Scope critique, gaps, roadmap and pitch outline — all at once.</span></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-num">3</div>
+          <div class="sol-text"><strong>Track & stay focused</strong><span>Run live standups, log blockers, and get unblocking advice on demand.</span></div>
+        </div>
+        <div class="sol-item">
+          <div class="sol-num">4</div>
+          <div class="sol-text"><strong>Ship with confidence</strong><span>Walk into demo day with a tight pitch and a working product.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4: FEATURES ── -->
+  <div class="slide slide-4" data-theme="dark">
+    <div class="orb" style="width:450px;height:450px;background:#5A6B5D;top:-100px;left:-100px;animation-delay:-2s;"></div>
+    <div class="feat-title">5 Coaching Superpowers</div>
+    <p class="feat-sub">Everything your team needs, built into one intelligent agent.</p>
+    <div class="feat-grid">
+      <div class="fcard">
+        <div class="fcard-icon">🎯</div>
+        <div class="fcard-name">Scope Critique</div>
+        <div class="fcard-desc">Instantly flags if the idea is too broad, too narrow, or perfectly scoped for the timeframe.</div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">🔍</div>
+        <div class="fcard-name">Gap Finder</div>
+        <div class="fcard-desc">Identifies missing technical, business, and UX pieces before they derail you.</div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">🗺️</div>
+        <div class="fcard-name">Roadmap Builder</div>
+        <div class="fcard-desc">Generates a visual, milestone-based plan with realistic time estimates for your team size.</div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">🎤</div>
+        <div class="fcard-name">Pitch Architect</div>
+        <div class="fcard-desc">Crafts a compelling pitch: Problem → Solution → Demo → Impact with talking scripts.</div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">⚠️</div>
+        <div class="fcard-name">Blocker Tracker</div>
+        <div class="fcard-desc">Live standup check: prioritizes tasks, unblocks risks, and suggests what to cut to ship on time.</div>
+      </div>
+      <div class="fcard">
+        <div class="fcard-icon">💬</div>
+        <div class="fcard-name">Coach Chat</div>
+        <div class="fcard-desc">Always-on AI mentor for spontaneous questions throughout the entire hackathon.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 5: HOW IT WORKS ── -->
+  <div class="slide slide-5" data-theme="light">
+    <div class="how-title">How It Works</div>
+    <p class="how-sub">From raw idea to demo-ready in 4 simple steps</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-icon">💡</div>
+        <h4>Input Concept</h4>
+        <p>Team describes the idea, timeframe, team size and tech stack</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-icon">🧠</div>
+        <h4>AI Analysis</h4>
+        <p>Gemini processes it through a specialized coaching system prompt</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-icon">📋</div>
+        <h4>Coaching Report</h4>
+        <p>Full 5-section report: scope, gaps, roadmap, pitch & risks</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-icon">🚀</div>
+        <h4>Ship It</h4>
+        <p>Ongoing chat & standup check keeps team focused till demo day</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 6: TECH STACK ── -->
+  <div class="slide slide-6" data-theme="light">
+    <div class="tech-wrap">
+      <h2>Built on a lean, <em style="font-style:italic;color:var(--terracotta)">production-grade</em> stack.</h2>
+      <div class="tech-col">
+        <h3>Backend</h3>
+        <div class="tech-pill-list">
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#68A063;"></span>Node.js</div>
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#000;"></span>Express</div>
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#1A73E8;"></span>Gemini AI API</div>
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#4CAF50;"></span>dotenv</div>
+        </div>
+      </div>
+      <div class="tech-col">
+        <h3>Frontend</h3>
+        <div class="tech-pill-list">
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#E44D26;"></span>Vanilla HTML</div>
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#264DE4;"></span>Pure CSS</div>
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#F7DF1E;"></span>Vanilla JS</div>
+          <div class="tech-pill"><span class="tech-pill-dot" style="background:#5A6B5D;"></span>Google Fonts</div>
+        </div>
+      </div>
+      <div class="tech-col" style="grid-column:1/-1">
+        <h3>Design Principles</h3>
+        <div class="tech-pill-list">
+          <div class="tech-pill">🎨 Earthy Aesthetic</div>
+          <div class="tech-pill">⚡ Zero Build Step</div>
+          <div class="tech-pill">🔌 REST API Architecture</div>
+          <div class="tech-pill">💬 Stateful Chat History</div>
+          <div class="tech-pill">📱 Responsive Layout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7: CTA ── -->
+  <div class="slide slide-7" data-theme="dark">
+    <div class="orb" style="width:600px;height:600px;background:#2C302E;top:-200px;right:-200px;"></div>
+    <div class="orb" style="width:400px;height:400px;background:#D5CBBF;opacity:.15;bottom:-100px;left:-50px;animation-delay:-6s;"></div>
+    <div class="cta-top">The Bottom Line</div>
+    <h1 class="cta-title">Stop guessing.<br/>Start <em>shipping.</em></h1>
+    <p class="cta-sub">LaunchCoach turns your raw idea into a structured plan, a compelling pitch, and a working demo — all in one place.</p>
+    <div class="cta-url">🚀 localhost:3000</div>
+    <div class="cta-team">LaunchCoach · Built at Hackathon 2026</div>
+  </div>
+
+</div>
+
+<!-- ── Controls ── -->
+<button class="arr dark" id="prev" onclick="move(-1)">‹</button>
+<button class="arr dark" id="next" onclick="move(1)">›</button>
+<div class="nav" id="nav"></div>
+<div class="slide-count" id="count" style="color:var(--muted);"></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const navEl = document.getElementById('nav');
+let cur = 0;
+
+// Build dots
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  d.onclick = () => go(i);
+  navEl.appendChild(d);
+});
+
+function go(n) {
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit');
+  setTimeout(() => slides[cur].classList.remove('exit'), 600);
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+
+  // Update dots
+  const theme = slides[cur].dataset.theme;
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.className = 'dot' + (theme === 'light' ? ' dark' : '') + (i === cur ? ' on' : '');
+  });
+
+  // Update arrows
+  const dark = theme === 'light';
+  document.getElementById('prev').className = 'arr' + (dark ? ' dark' : '');
+  document.getElementById('next').className = 'arr' + (dark ? ' dark' : '');
+
+  // Update count
+  const cnt = document.getElementById('count');
+  cnt.textContent = `${cur + 1} / ${slides.length}`;
+  cnt.style.color = dark ? 'var(--muted)' : 'rgba(255,255,255,.4)';
+}
+
+function move(dir) { go(cur + dir); }
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') move(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') move(-1);
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+document.addEventListener('touchend', e => {
+  const dx = tx - e.changedTouches[0].clientX;
+  if (Math.abs(dx) > 50) move(dx > 0 ? 1 : -1);
+});
+
+// Init
+go(0);
+</script>
+</body>
+</html>
